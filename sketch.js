@@ -1,5 +1,5 @@
 let socket;
-let nombreCanal = "mi-primer-canal"; // DEBE ser el mismo que el del emisor
+let nombreCanal = "canal-mouse-horizotal"; // DEBE ser el mismo que el del emisor
 let valorRecibido = 0;
 
 function setup() {
