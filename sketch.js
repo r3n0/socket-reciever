@@ -1,4 +1,4 @@
-const nCanales = 25;
+const nCanales = 15;
 let socket = [];
 let nombresDeCanales = []; // DEBE ser el mismo que el del emisor
 let valorRecibido = [];
@@ -12,7 +12,8 @@ function setup() {
 	for (let i = 0; i < nCanales; i++) {
 		// Conexión al servidor (usa tu IP y puerto 3000)
 		socket[i] = io('https://telepresencia.art', {
-			transports: ['websocket'],
+			path: '/datos-v1/', // <--- MUY IMPORTANTE: debe coincidir exactamente
+			transports: ['polling'], // Seguimos con polling para mayor seguridad ante el firewall
 		});
 
 		// 1. Confirmar conexión y unirse al canal
