@@ -11,7 +11,7 @@ function setup() {
 	}
 	for (let i = 0; i < nCanales; i++) {
 		// Conexión al servidor (usa tu IP y puerto 3000)
-		socket[i] = io('http://206.189.168.40:3000', {
+		socket[i] = io('https://telepresencia.art', {
 			transports: ['websocket'],
 		});
 
