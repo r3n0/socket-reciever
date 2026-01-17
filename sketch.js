@@ -1,39 +1,44 @@
-let socket;
-let nombreCanal = "canal-mouse-horizotal"; // DEBE ser el mismo que el del emisor
-let valorRecibido = 0;
+const nCanales = 25;
+let socket = [];
+let nombresDeCanales = []; // DEBE ser el mismo que el del emisor
+let valorRecibido = [];
 
 function setup() {
-  createCanvas(400, 200);
-  
-  // Conexión al servidor (usa tu IP y puerto 3000)
-  socket = io('http://206.189.168.40:3000', { 
-    transports: ['websocket'] 
-  });
+	createCanvas(400, 200);
 
-  // 1. Confirmar conexión y unirse al canal
-  socket.on('connect', () => {
-    console.log("✅ Receptor conectado con ID:", socket.id);
-    socket.emit('join-channel', nombreCanal);
-  });
+	for (let i = 0; i < nCanales; i++) {
+		nombresDeCanales[i] = `canal-${i + 1}`;
+	}
+	for (let i = 0; i < nCanales; i++) {
+		// Conexión al servidor (usa tu IP y puerto 3000)
+		socket[i] = io('http://206.189.168.40:3000', {
+			transports: ['websocket'],
+		});
 
-  // 2. ESCUCHAR el evento que envía el servidor
-  socket.on('update-value', (data) => {
-    valorRecibido = data;
-    console.log("📥 Valor recibido desde el emisor:", valorRecibido);
-  });
+		// 1. Confirmar conexión y unirse al canal
+		socket[i].on('connect', () => {
+			console.log('✅ Receptor conectado con ID:', socket[i].id);
+			socket[i].emit('join-channel', nombresDeCanales[i]);
+		});
+
+		// 2. ESCUCHAR el evento que envía el servidor
+		socket[i].on('update-value', (data) => {
+			valorRecibido[i] = data;
+			// console.log('📥 Valor recibido desde el emisor:', valorRecibido[i]);
+		});
+	}
 }
 
 function draw() {
-  background(0);
-  fill(0, 255, 0);
-  textSize(24);
-  textAlign(CENTER, CENTER);
-  text("DATOS DEL EMISOR", width/2, 40);
-  
-  textSize(60);
-  text(valorRecibido + "°", width/2, height/2 + 20);
-  
-  // Visualización simple
-  let xPos = map(valorRecibido, 0, 180, 50, width-50);
-  ellipse(xPos, 150, 20, 20);
+	background(255);
+	let barheight = 5;
+
+	for (let i = 0; i < nCanales; i++) {
+		let lineHeight = (height / nCanales) * (i + 1);
+		fill(0);
+		textSize(barheight);
+		text(nombresDeCanales[i], barheight, lineHeight - barheight / 2);
+
+		rect(30, lineHeight - barheight, valorRecibido[i], barheight);
+	}
 }
