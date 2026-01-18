@@ -2,16 +2,19 @@ const nCanales = 15;
 let socket = [];
 let nombresDeCanales = []; // DEBE ser el mismo que el del emisor
 let valorRecibido = [];
+let valorCanal2;
+let colores = [];
 
 function setup() {
-	createCanvas(400, 200);
+	createCanvas(800, 600);
 
 	for (let i = 0; i < nCanales; i++) {
 		nombresDeCanales[i] = `canal-${i + 1}`;
+		colores[i] = color(random(100, 180), random(100, 180), random(100, 180));
 	}
 	for (let i = 0; i < nCanales; i++) {
 		// Conexión al servidor (usa tu IP y puerto 3000)
-		socket[i] = io('http://localhost:3000', {
+		socket[i] = io('http://10.0.0.101:3000', {
 			transports: ['websocket'],
 		});
 
@@ -26,19 +29,38 @@ function setup() {
 			valorRecibido[i] = data;
 			// console.log('📥 Valor recibido desde el emisor:', valorRecibido[i]);
 		});
+
+		if (nombresDeCanales[i] == 'canal-2') {
+			valorCanal2 = socket[i];
+		}
 	}
 }
 
 function draw() {
 	background(255);
-	let barheight = 5;
+	let barheight = 20;
 
 	for (let i = 0; i < nCanales; i++) {
 		let lineHeight = (height / nCanales) * (i + 1);
-		fill(0);
+		fill(colores[i]);
 		textSize(barheight);
 		text(nombresDeCanales[i], barheight, lineHeight - barheight / 2);
 
-		rect(30, lineHeight - barheight, valorRecibido[i], barheight);
+		if (nombresDeCanales[i] == 'canal-2' && valorRecibido[i] != undefined) {
+			noStroke();
+			fill(255, 20, 0);
+			rect(100, lineHeight - barheight, valorRecibido[i].val1 * 2, barheight);
+			fill(100, 20, 0);
+			text('val1: ' + valorRecibido[i].val1, 100, lineHeight - barheight / 2);
+			fill(20, 255, 0);
+			rect(600, lineHeight - barheight, valorRecibido[i].val2 * 2, barheight);
+			fill(20, 100, 0);
+			text('val2: ' + valorRecibido[i].val2, 600, lineHeight - barheight / 2);
+			continue;
+		}
+
+		rect(100, lineHeight - barheight, valorRecibido[i] * 4, barheight);
 	}
+
+
 }
