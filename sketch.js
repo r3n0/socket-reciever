@@ -11,9 +11,8 @@ function setup() {
 	}
 	for (let i = 0; i < nCanales; i++) {
 		// Conexión al servidor (usa tu IP y puerto 3000)
-		socket[i] = io('https://telepresencia.art', {
-			path: '/datos-v1/', // <--- MUY IMPORTANTE: debe coincidir exactamente
-			transports: ['polling'], // Seguimos con polling para mayor seguridad ante el firewall
+		socket[i] = io('http://localhost:3000', {
+			transports: ['websocket'],
 		});
 
 		// 1. Confirmar conexión y unirse al canal
