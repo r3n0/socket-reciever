@@ -59,6 +59,19 @@ function draw() {
 			continue;
 		}
 
+		if (nombresDeCanales[i] == 'canal-3' && valorRecibido[i] != undefined) {
+			noStroke();
+			fill(255, 20, 0);
+			rect(100, lineHeight - barheight, valorRecibido[i].contrast * 2, barheight);
+			fill(100, 20, 0);
+			text('contrast: ' + valorRecibido[i].contrast, 100, lineHeight - barheight / 2);
+			fill(20, 255, 0);
+			rect(600, lineHeight - barheight, valorRecibido[i].brightness * 2, barheight);
+			fill(20, 100, 0);
+			text('brightness: ' + valorRecibido[i].brightness, 600, lineHeight - barheight / 2);
+			continue;
+		}
+
 		rect(100, lineHeight - barheight, valorRecibido[i] * 4, barheight);
 	}
 
